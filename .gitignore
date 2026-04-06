@@ -39,3 +39,7 @@
 
 # debug information files
 *.dwo
+.aider*
+
+# Secrets - never commit these!
+secrets.yaml

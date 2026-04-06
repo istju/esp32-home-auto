@@ -1,0 +1,101 @@
+esphome:
+  name: esp32-webradio
+  friendly_name: ESP32 Webradio
+  platform: ESP32
+  board: esp32-s3-devkitc-1
+
+# External secrets file
+substitutions:
+  device_name: esp32-webradio
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "ESP32 Webradio Fallback"
+    password: !secret wifi_fallback_password
+
+# Bluetooth Low Energy
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 1100ms
+    window: 1100ms
+    active: true
+
+# Bluetooth Classic (for audio)
+esp32_ble_beacon:
+
+logger:
+  level: DEBUG
+  baud_rate: 115200
+
+# Home Assistant API
+api:
+  password: !secret api_password
+  reboot_timeout: 15min
+  encryption:
+    key: !secret api_encryption_key
+
+# OTA Updates
+ota:
+  password: !secret ota_password
+  safe_mode: true
+
+# Web Server for local control
+web_server:
+  port: 80
+  auth:
+    username: !secret web_server_username
+    password: !secret web_server_password
+
+# Time synchronization
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+  - platform: sntp
+    id: sntp_time
+    servers:
+      - 0.pool.ntp.org
+      - 1.pool.ntp.org
+      - 2.pool.ntp.org
+
+# I2S Audio Configuration (based on CONTEXT.md pinout)
+i2s_audio:
+  - id: i2s_output
+    i2s_lrclk_pin: GPIO6
+    i2s_bclk_pin: GPIO5
+    i2s_mclk_pin: GPIO4
+
+# DAC Output
+media_player:
+  - platform: i2s_audio
+    id: webradio_dac
+    name: "Webradio DAC"
+    i2s_dout_pin: GPIO7
+    dac_type: external
+    mode: stereo
+
+# Output pins (merged into single block)
+output:
+  - platform: gpio
+    id: amp_mute
+    pin: GPIO48
+  - platform: ledc
+    id: piezo_output
+    pin: GPIO47
+    frequency: 1000Hz
+
+# Binary Sensors for BLE Thermometers
+sensor:
+  - platform: xiaomi_hhccjcy01
+    mac_address: !secret thermometer_1_mac
+    temperature:
+      name: "Thermometer 1 Temperature"
+    moisture:
+      name: "Thermometer 1 Moisture"
+    illuminance:
+      name: "Thermometer 1 Illuminance"
+    conductivity:
+      name: "Thermometer 1 Conductivity"
+    battery_level:
+      name: "Thermometer 1 Battery"
