@@ -85,6 +85,29 @@ output:
     pin: GPIO47
     frequency: 1000Hz
 
+# Pop-free startup: MUTE amp during boot, then enable after stabilization
+on_boot:
+  - priority: 600
+    then:
+      - output.turn_off: amp_mute  # MUTE on (pull SD pin low)
+  - priority: 250
+    then:
+      - output.turn_on: amp_mute   # MUTE off (enable amp after boot)
+
+# Piezo notification script (3 beeps)
+script:
+  - id: piezo_beep
+    name: "Piezo Beep Notification"
+    mode: queued
+    then:
+      - repeat:
+          count: 3
+          then:
+            - output.turn_on: piezo_output
+            - delay: 100ms
+            - output.turn_off: piezo_output
+            - delay: 50ms
+
 # Binary Sensors for BLE Thermometers
 sensor:
   - platform: xiaomi_hhccjcy01
