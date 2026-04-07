@@ -87,12 +87,12 @@ output:
 
 # Pop-free startup: MUTE amp during boot, then enable after stabilization
 on_boot:
-  - priority: 600
+  - priority: 100
     then:
-      - output.turn_off: amp_mute  # MUTE on (pull SD pin low)
-  - priority: 250
-    then:
-      - output.turn_on: amp_mute   # MUTE off (enable amp after boot)
+      - output.turn_off: amp_mute   # MUTE on (pull SD pin low)
+      - delay: 2s                   # Wait for system to stabilize
+      - output.turn_on: amp_mute    # MUTE off (enable amp)
+      - script.execute: piezo_beep  # Audio notification that device is ready
 
 # Piezo notification script (3 beeps)
 script:
