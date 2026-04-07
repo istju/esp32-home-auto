@@ -108,17 +108,34 @@ script:
             - output.turn_off: piezo_output
             - delay: 50ms
 
-# Binary Sensors for BLE Thermometers
+# BLE Thermometers (3x with custom firmware - xiaomi_ble)
 sensor:
-  - platform: xiaomi_hhccjcy01
+  - platform: xiaomi_ble
     mac_address: !secret thermometer_1_mac
+    bindkey: !secret thermometer_1_bindkey
     temperature:
-      name: "Thermometer 1 Temperature"
-    moisture:
-      name: "Thermometer 1 Moisture"
-    illuminance:
-      name: "Thermometer 1 Illuminance"
-    conductivity:
-      name: "Thermometer 1 Conductivity"
+      name: "Nappali Hőmérséklet"
+    humidity:
+      name: "Nappali Páratartalom"
     battery_level:
-      name: "Thermometer 1 Battery"
+      name: "Nappali Akkumulátor"
+
+  - platform: xiaomi_ble
+    mac_address: !secret thermometer_2_mac
+    bindkey: !secret thermometer_2_bindkey
+    temperature:
+      name: "Dóri Szobája Hőmérséklet"
+    humidity:
+      name: "Dóri Szobája Páratartalom"
+    battery_level:
+      name: "Dóri Szobája Akkumulátor"
+
+  - platform: xiaomi_ble
+    mac_address: !secret thermometer_3_mac
+    bindkey: !secret thermometer_3_bindkey
+    temperature:
+      name: "Fürdőszoba Hőmérséklet"
+    humidity:
+      name: "Fürdőszoba Páratartalom"
+    battery_level:
+      name: "Fürdőszoba Akkumulátor"
