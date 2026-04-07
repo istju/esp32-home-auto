@@ -1,8 +1,14 @@
 esphome:
   name: esp32-webradio
   friendly_name: ESP32 Webradio
-  platform: ESP32
+
+esp32:
   board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+  psram:
+    mode: quad
+    size: 8MB
 
 # External secrets file
 substitutions:
